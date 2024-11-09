@@ -546,6 +546,102 @@ std::vector<faiss::idx_t> load_gt(std::string dataset, int n_centroids, int alph
 
 
 
+/* 
+@brief function to load data stored in a .txt format
+@param path  describes the path to the data.
+ Has to be in the following format .../name.txt
+ The txt has to follow the format:
+first row: #rows #cols
+all other rows: data data data .... 
+@param store a 2d array that will store the data
+*/
+void read_txt (const char *path, std::vector<std::vector<std::string>> &store){
+    std::ifstream file(path);
+
+    // check if file was opened correctly
+    if (!file.is_open()){ 
+        std::cerr << "ERROR: Unable to open file " << path << std::endl;
+        exit(-1);
+    }
+
+    // get the num of points and dim from the input file
+    int rows, cols;
+    file >> rows >> cols;
+    
+    // initalize the store matrix
+    store.resize(rows, std::vector<std::string>(cols));
+
+    // fill the store matrix
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            file >> store[i][j];
+        }
+    }
+
+    std::cout << "loaded the data successfully" << std::endl;
+}
+
+
+/* 
+@brief function to load data stored in a *ivecs format
+@param path  describes the path to the data.
+ Has to be in the following format .../name.*ivecs
+@param store a 2d array that will store the data
+@param num_points a reference to an int that will store the number of datapoints
+@param dim_points a reference to an int that will the dimensionality of the datapoints
+@param k if k is set then for each query it returns only top k results. Must be smaller than dim_points (normally 100)
+@param only_meta a flag that if set to true only returns the number and dim of points
+@param depr limits the number of points that will be returned, changes num_points to depr. If depr is not set, just default to num_points 
+*/
+void read_ivecs (const char *path, std::vector<int> &store, int &num_points, int &dim_points, int k = -1, bool only_meta = false, int depr = -1){
+    std::ifstream file(path, std::ios::binary);
+
+    // check if file was opened correctly
+    if (!file.is_open()){ 
+        std::cerr << "ERROR: Unable to open file " << path << std::endl;
+        exit(-1);
+    }
+
+    file.read((char *)&dim_points, sizeof(int));// get the dimension from the input file
+    std::cout << "Dimension: " << dim_points << std::endl;
+
+    // calculate the size of the file by setting the seek pointer to the end
+    file.seekg(0, std::ios::end);
+    std::ios::pos_type ss = file.tellg();
+    int file_size = (int) ss;
+    file.seekg(0, std::ios::beg); // reset seek pointer
+    num_points = file_size/(dim_points+1)/sizeof(int); // get the number of poinmts by dividing with the query_dim + 1 (since dim is at the start of each data point as well) and number of bytes per query
+    std::cout << "number of points: " << num_points << std::endl;
+
+    if(only_meta){
+        return;
+    }
+
+    if(depr != -1){
+        num_points = depr;
+    }
+
+    if(k == -1){
+        k = dim_points;
+    }
+ 
+    int* temp_points = new int[num_points * dim_points * sizeof(int)]; // initalize the points array
+    // fill the point array
+    for (size_t i = 0; i < num_points; i++){
+        file.seekg(sizeof(int), std::ios::cur); // move the pointer by sizeof(int) bytes
+        file.read((char *)(temp_points + i * dim_points), dim_points * sizeof(int)); // stores the 128 T associated with point i at position 
+    }
+    // store the points in a matrix for easier access!
+    store.resize(num_points*k);
+    for (size_t i = 0; i < num_points; i++){
+        for (size_t j = 0; j < k; j++){
+            store[i * dim_points + j] = temp_points[i * dim_points + j]; // store the individual T in the point matrix
+        }
+    }
+
+    std::cout << "loaded the points successfully" << std::endl;
+}
+
 
 
 

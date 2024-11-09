@@ -109,3 +109,6 @@ target_link_libraries(test_acorn PRIVATE faiss)
 
 add_executable(index EXCLUDE_FROM_ALL index.cpp)
 target_link_libraries(index PRIVATE faiss)
+
+add_executable(query EXCLUDE_FROM_ALL query.cpp)
+target_link_libraries(query PRIVATE faiss)

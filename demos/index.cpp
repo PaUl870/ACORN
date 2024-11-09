@@ -120,26 +120,6 @@ int main(int argc, char *argv[]) {
     // (maybe needed for HNSW)
     std::vector<int> metadata(N,0);
 
-
-    size_t nq;
-    float* xq;
-    { // load query vectors and attributes
-        printf("[%.3f s] Loading query vectors and attributes\n", elapsed() - t0);
-
-        size_t d2;
-        bool is_base = 0;
-        std::string filename = data_path + "query.fvecs";
-        xq = fvecs_read(filename.c_str(), &d2, &nq);
-        assert(d == d2 || !"query does not have same dimension as expected 128");
-        if (d != d2) {
-            d = d2;
-        }
-        
-        std::cout << "query vecs data loaded, with dim: " << d2 << ", nb=" << nq << std::endl;
-        printf("[%.3f s] Loaded query vectors from %s\n", elapsed() - t0, filename.c_str());
- 
-    }
-
     // create normal (base) and hybrid index
     printf("[%.3f s] Index Params -- d: %ld, M: %d, N: %ld, gamma: %d\n",
                elapsed() - t0, d, M, N, gamma);
