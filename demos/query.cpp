@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
     std::string data_path;
     std::string save_path;
     int k;
+    int efs;
     int efc = 40; // default is 40
-    int efs =   32; //  default is 16
     size_t d = 128; // dimension of the vectors to index - will be overwritten by the dimension of the dataset
     int M; // HSNW param M TODO change M back
     int M_beta; // param for compression
@@ -77,8 +77,8 @@ int main(int argc, char *argv[]) {
     int opt;
     {// parse arguments
 
-        if (argc < 9 || argc > 11) {
-            fprintf(stderr, "Syntax: %s <data_path> <save_path> <number vecs> <k> <gamma> [<assignment_type>] [<alpha>] <dataset> <M> <M_beta>\n", argv[0]);
+        if (argc < 10 || argc > 12) {
+            fprintf(stderr, "Syntax: %s <data_path> <save_path> <number vecs> <k> <gamma> [<assignment_type>] [<alpha>] <dataset> <M> <M_beta> <efs>\n", argv[0]);
             exit(1);
         }
 
@@ -112,6 +112,9 @@ int main(int argc, char *argv[]) {
 
         M_beta = atoi(argv[8]);
         printf("M_beta: %d\n", M_beta);
+
+        efs = atoi(argv[9]);
+        printf("efs: %d\n", efs);
 
     }
 
