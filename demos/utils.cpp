@@ -644,6 +644,35 @@ void read_ivecs (const char *path, std::vector<int> &store, int &num_points, int
 
 
 
+vector<vector<int>> range_transform(vector<vector<string>>& aq, int xq){
+    vector<vector<int>> raq(xq, std::vector<int>(2, 0));
+    string cur;
+    for (int i = 0; i < xq; i++){
+        cur = aq[i][0];
+        if (cur.size() < 5 || cur.front() != '(' || cur.back() != ')') {
+            throw std::invalid_argument("Invalid format: expected (x,y)");
+        }
+
+        // Find the comma
+        size_t commaPos = cur.find(',');
+        if (commaPos == std::string::npos) {
+            throw std::invalid_argument("Invalid format: no comma found");
+        }
+
+        // Extract x and y as substrings and convert to integers
+        std::string xStr = cur.substr(1, commaPos - 1);             // Extract x
+        std::string yStr = cur.substr(commaPos + 1, cur.size() - commaPos - 2); // Extract y
+
+        int x = std::stoi(xStr);
+        int y = std::stoi(yStr);
+
+        cout << "cur: " << cur << " x: " << x << " y: " << y << endl; 
+        raq[i][0] = x;
+        raq[i][1] = y;
+        }
+}
+
+
 
 
 

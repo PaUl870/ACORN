@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
     std::string save_path;
     int k;
     int efs;
+    bool range = false;
     int efc = 40; // default is 40
     size_t d = 128; // dimension of the vectors to index - will be overwritten by the dimension of the dataset
     int M; // HSNW param M TODO change M back
@@ -77,7 +78,7 @@ int main(int argc, char *argv[]) {
     int opt;
     {// parse arguments
 
-        if (argc < 10 || argc > 12) {
+        if (argc < 11 || argc > 13) {
             fprintf(stderr, "Syntax: %s <data_path> <save_path> <number vecs> <k> <gamma> [<assignment_type>] [<alpha>] <dataset> <M> <M_beta> <efs>\n", argv[0]);
             exit(1);
         }
@@ -115,6 +116,8 @@ int main(int argc, char *argv[]) {
 
         efs = atoi(argv[9]);
         printf("efs: %d\n", efs);
+
+        range = (std::string(argv[10]) == "range");
 
     }
 
@@ -187,15 +190,32 @@ int main(int argc, char *argv[]) {
         std::vector<faiss::idx_t> nns2(k * nq);
         std::vector<float> dis2(k * nq);
 
-        // create filter_ids_map, ie a bitmap of the ids that are in the filter
-        double t1_f = elapsed();
+
+        double t1_f, t2_f;
         std::vector<char> filter_ids_map(nq * N);
-        for (int xq = 0; xq < nq; xq++) {
-            for (int xb = 0; xb < N; xb++) {
-                filter_ids_map[xq * N + xb] = (bool) (metadata[xb] == aq[xq]);
+        // create filter_ids_map, ie a bitmap of the ids that are in the filter
+        if (range){
+
+            vector<vector<int>> raq = range_transform(aq);
+            
+            t1_f = elapsed();
+            for (int xq = 0; xq < nq; xq++) {
+                for (int xb = 0; xb < N; xb++) {
+                    filter_ids_map[xq * N + xb] = (bool) (raq[xq][0] <= xb raq[xq][1]);
+                }
             }
+            t2_f = elapsed();
+
+        }else{
+            t1_f = elapsed();
+            for (int xq = 0; xq < nq; xq++) {
+                for (int xb = 0; xb < N; xb++) {
+                    filter_ids_map[xq * N + xb] = (bool) (metadata[xb] == aq[xq]);
+                }
+            }
+            t2_f = elapsed();
         }
-        double t2_f = elapsed();
+
 
         double t1_x = elapsed();
         hybrid_index.search(nq, xq, k, dis2.data(), nns2.data(), filter_ids_map.data()); // TODO change first argument back to nq
