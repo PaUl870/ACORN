@@ -128,13 +128,18 @@ int main(int argc, char *argv[]) {
     std::vector<int> gt;
 
     { // load attributes
-        printf("[%.3f s] Loading attributes\n", elapsed() - t0);
 
 
         std::string filename = data_path + "label_base.txt";
-        read_txt(filename.c_str(), metadata);
-        printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
-        elapsed() - t0, metadata[0].size());
+        if(!range){
+            printf("[%.3f s] Loading attributes\n", elapsed() - t0);
+            
+            read_txt(filename.c_str(), metadata);
+
+            printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
+                elapsed() - t0, metadata[0].size());
+
+        }
 
 
         filename = data_path + "label_query.txt";
@@ -196,13 +201,14 @@ int main(int argc, char *argv[]) {
         // create filter_ids_map, ie a bitmap of the ids that are in the filter
         if (range){
 
-            vector<vector<int>> raq = range_transform(aq);
-            
+            std::vector<std::vector<int>> raq = range_transform(aq, nq);
+            std::cout << "succ" << std::endl;
             t1_f = elapsed();
-            for (int xq = 0; xq < nq; xq++) {
+            for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
-                    filter_ids_map[xq * N + xb] = (bool) (raq[xq][0] <= xb raq[xq][1]);
+                    filter_ids_map[iq * N + xb] = (bool) ((raq[iq][0] <= xb) && (xb <= raq[iq][1]));
                 }
+        
             }
             t2_f = elapsed();
 
@@ -232,6 +238,7 @@ int main(int argc, char *argv[]) {
         uint32_t count = 0;
         int* answer = gt.data();
         faiss::idx_t* guess = nns2.data();
+
 
         for (int i=0;i<nq;i++){
             std::sort(answer+ k*i, answer + (i+1)*k);

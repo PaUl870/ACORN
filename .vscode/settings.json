@@ -74,6 +74,7 @@
         "__tree": "cpp",
         "list": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "filesystem": "cpp"
     }
 }

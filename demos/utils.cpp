@@ -567,6 +567,7 @@ void read_txt (const char *path, std::vector<std::vector<std::string>> &store){
     // get the num of points and dim from the input file
     int rows, cols;
     file >> rows >> cols;
+
     
     // initalize the store matrix
     store.resize(rows, std::vector<std::string>(cols));
@@ -644,10 +645,10 @@ void read_ivecs (const char *path, std::vector<int> &store, int &num_points, int
 
 
 
-vector<vector<int>> range_transform(vector<vector<string>>& aq, int xq){
-    vector<vector<int>> raq(xq, std::vector<int>(2, 0));
-    string cur;
-    for (int i = 0; i < xq; i++){
+std::vector<std::vector<int>> range_transform(std::vector<std::vector<std::string>> aq, int nq){
+    std::vector<std::vector<int>> raq(nq, std::vector<int>(2, 0));
+    std::string cur;
+    for (int i = 0; i < nq; i++){
         cur = aq[i][0];
         if (cur.size() < 5 || cur.front() != '(' || cur.back() != ')') {
             throw std::invalid_argument("Invalid format: expected (x,y)");
@@ -666,10 +667,10 @@ vector<vector<int>> range_transform(vector<vector<string>>& aq, int xq){
         int x = std::stoi(xStr);
         int y = std::stoi(yStr);
 
-        cout << "cur: " << cur << " x: " << x << " y: " << y << endl; 
         raq[i][0] = x;
         raq[i][1] = y;
-        }
+    }
+    return raq;
 }
 
 
