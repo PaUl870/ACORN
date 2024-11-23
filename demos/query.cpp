@@ -202,7 +202,6 @@ int main(int argc, char *argv[]) {
         if (range){
 
             std::vector<std::vector<int>> raq = range_transform(aq, nq);
-            std::cout << "succ" << std::endl;
             t1_f = elapsed();
             for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
