@@ -131,15 +131,13 @@ int main(int argc, char *argv[]) {
 
 
         std::string filename = data_path + "label_base.txt";
+        printf("[%.3f s] Loading attributes\n", elapsed() - t0);
         if(!range){
-            printf("[%.3f s] Loading attributes\n", elapsed() - t0);
-            
             read_txt(filename.c_str(), metadata);
-
-            printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
-                elapsed() - t0, metadata[0].size());
-
         }
+        printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
+            elapsed() - t0, metadata[0].size());
+
 
 
         filename = data_path + "label_query.txt";
