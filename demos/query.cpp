@@ -250,6 +250,20 @@ int main(int argc, char *argv[]) {
                                 guess+ k*i, guess+ (i+1)*k, // Input iterators for second range 
                                 std::back_inserter(tmp));
             count += double(tmp.size());
+
+            // ################## delete that later ##################
+            // ################## delete that later ##################
+            std::cerr << "answer: ";
+            std::copy(answer.begin(), answer.end(), std::ostream_iterator<int>(std::cerr, " "));
+            std::cerr << std::endl;
+
+            // Print the 'guess' vector
+            std::cerr << "guess: ";
+            std::copy(guess.begin(), guess.end(), std::ostream_iterator<int>(std::cerr, " "));
+            std::cerr << std::endl;
+            // ################## delete that later ##################
+            // ################## delete that later ##################
+
         }
 
         double recall = (count/double(nq*k));
