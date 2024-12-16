@@ -254,13 +254,19 @@ int main(int argc, char *argv[]) {
             // ################## delete that later ##################
             // ################## delete that later ##################
             std::cerr << "answer: ";
-            std::copy(answer.begin(), answer.end(), std::ostream_iterator<int>(std::cerr, " "));
+            for (int* it = answer+ k*i; it < answer + (i+1)*k; ++it) {
+                std::cerr << *it << " ";
+            }
             std::cerr << std::endl;
 
-            // Print the 'guess' vector
+            // Print the 'guess' array
             std::cerr << "guess: ";
-            std::copy(guess.begin(), guess.end(), std::ostream_iterator<int>(std::cerr, " "));
+            for (faiss::idx_t* it = guess+ k*i; it < guess+ (i+1)*k; ++it) {
+                std::cerr << *it << " ";
+            }
             std::cerr << std::endl;
+
+
             // ################## delete that later ##################
             // ################## delete that later ##################
 
