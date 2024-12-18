@@ -148,8 +148,12 @@ int main(int argc, char *argv[]) {
         printf("[%.3f s] Indexing database, size %ld*%ld from max %ld\n",
                elapsed() - t0, N, d2, nb);
 
-
+        double t1_x = elapsed();
         hybrid_index.add(N, xb);
+        double t2_x = elapsed();
+        printf("[%.3f s] *** TTI: %f\n",
+        elapsed() - t0, t2_x - t1_x);
+
         printf("[%.3f s] Vectors added to hybrid index \n", elapsed() - t0);
         std::cout << "Hybrid index vectors added" << nb << std::endl;    
 
