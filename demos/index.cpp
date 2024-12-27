@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     int efc = 40; // default is 40
     int efs = 16; //  default is 16
     int k = 10; // search parameter
-    size_t d = 128; // dimension of the vectors to index - will be overwritten by the dimension of the dataset
+    size_t d = 0; // dimension of the vectors to index - will be overwritten by the dimension of the dataset
     int M; // HSNW param M TODO change M back
     int M_beta; // param for compression
     // float attr_sel = 0.001;
