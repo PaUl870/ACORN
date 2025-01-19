@@ -41,6 +41,28 @@
 #include <nlohmann/json.hpp>
 #include "utils.cpp"
 
+void peak_memory_footprint()
+{
+
+    unsigned iPid = (unsigned)getpid();
+
+    std::cout << "PID: " << iPid << std::endl;
+
+    std::string status_file = "/proc/" + std::to_string(iPid) + "/status";
+    std::ifstream info(status_file);
+    if (!info.is_open())
+    {
+        std::cout << "memory information open error!" << std::endl;
+    }
+    std::string tmp;
+    while (getline(info, tmp))
+    {
+        if (tmp.find("Name:") != std::string::npos || tmp.find("VmPeak:") != std::string::npos || tmp.find("VmHWM:") != std::string::npos)
+            std::cout << tmp << std::endl;
+    }
+    info.close();
+}
+
 // create indices for debugging, write indices to file, and get recall stats for all queries
 int main(int argc, char *argv[]) {
     unsigned int nthreads = std::thread::hardware_concurrency();
@@ -151,6 +173,7 @@ int main(int argc, char *argv[]) {
         double t1_x = elapsed();
         hybrid_index.add(N, xb);
         double t2_x = elapsed();
+        peak_memory_footprint();
         printf("[%.3f s] *** TTI: %f\n",
         elapsed() - t0, t2_x - t1_x);
 
@@ -176,6 +199,7 @@ int main(int argc, char *argv[]) {
 
         
     }
+
 
 
     { // print out stats

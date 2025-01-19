@@ -41,6 +41,29 @@
 #include <nlohmann/json.hpp>
 #include "utils.cpp"
 
+void peak_memory_footprint()
+{
+
+    unsigned iPid = (unsigned)getpid();
+
+    std::cout << "PID: " << iPid << std::endl;
+
+    std::string status_file = "/proc/" + std::to_string(iPid) + "/status";
+    std::ifstream info(status_file);
+    if (!info.is_open())
+    {
+        std::cout << "memory information open error!" << std::endl;
+    }
+    std::string tmp;
+    while (getline(info, tmp))
+    {
+        if (tmp.find("Name:") != std::string::npos || tmp.find("VmPeak:") != std::string::npos || tmp.find("VmHWM:") != std::string::npos)
+            std::cout << tmp << std::endl;
+    }
+    info.close();
+}
+
+
 // create indices for debugging, write indices to file, and get recall stats for all queries
 int main(int argc, char *argv[]) {
     unsigned int nthreads = std::thread::hardware_concurrency();
@@ -229,6 +252,8 @@ int main(int argc, char *argv[]) {
         hybrid_index.search(nq, xq, k, dis2.data(), nns2.data(), filter_ids_map.data()); // TODO change first argument back to nq
         double t2_x = elapsed();
 
+        peak_memory_footprint();
+
 
 
         printf("[%.3f s] *** Query time: %f\n",
@@ -250,26 +275,6 @@ int main(int argc, char *argv[]) {
                                 guess+ k*i, guess+ (i+1)*k, // Input iterators for second range 
                                 std::back_inserter(tmp));
             count += double(tmp.size());
-
-            // ################## delete that later ##################
-            // ################## delete that later ##################
-            std::cerr << "answer: ";
-            for (int* it = answer+ k*i; it < answer + (i+1)*k; ++it) {
-                std::cerr << *it << " ";
-            }
-            std::cerr << std::endl;
-
-            // Print the 'guess' array
-            std::cerr << "guess: ";
-            for (faiss::idx_t* it = guess+ k*i; it < guess+ (i+1)*k; ++it) {
-                std::cerr << *it << " ";
-            }
-            std::cerr << std::endl;
-
-
-            // ################## delete that later ##################
-            // ################## delete that later ##################
-
         }
 
         double recall = (count/double(nq*k));
