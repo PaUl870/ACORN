@@ -186,7 +186,6 @@ int main(int argc, char *argv[]) {
         delete[] xb;       
     }
 
-    peak_memory_footprint();
 
 
        // write hybrid index and partition indices to files
