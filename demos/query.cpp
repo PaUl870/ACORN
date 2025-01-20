@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
     int efs;
     bool range = false;
     int efc = 40; // default is 40
-    size_t d = 128; // dimension of the vectors to index - will be overwritten by the dimension of the dataset
+    size_t d; // dimension of the vectors to index - will be overwritten by the dimension of the dataset
     int M; // HSNW param M TODO change M back
     int M_beta; // param for compression
     // float attr_sel = 0.001;
@@ -101,8 +101,8 @@ int main(int argc, char *argv[]) {
     int opt;
     {// parse arguments
 
-        if (argc < 11 || argc > 13) {
-            fprintf(stderr, "Syntax: %s <data_path> <save_path> <number vecs> <k> <gamma> [<assignment_type>] [<alpha>] <dataset> <M> <M_beta> <efs>\n", argv[0]);
+        if (argc < 12 || argc > 14) {
+            fprintf(stderr, "Syntax: %s <data_path> <save_path> <number vecs> <k> <gamma> [<assignment_type>] [<alpha>] <dataset> <M> <M_beta> <efs> <range> <d>\n", argv[0]);
             exit(1);
         }
 
@@ -141,6 +141,9 @@ int main(int argc, char *argv[]) {
         printf("efs: %d\n", efs);
 
         range = (std::string(argv[10]) == "range");
+
+        d = atoi(argv[11]);
+        printf("d: %d\n", d);
 
     }
 
@@ -275,6 +278,22 @@ int main(int argc, char *argv[]) {
                                 guess+ k*i, guess+ (i+1)*k, // Input iterators for second range 
                                 std::back_inserter(tmp));
             count += double(tmp.size());
+
+            // ################## delete that later ##################
+            // ################## delete that later ##################
+            std::cerr << "answer: ";
+            for (int* it = answer+ k*i; it < answer + (i+1)*k; ++it) {
+                std::cerr << *it << " ";
+            }
+            std::cerr << std::endl;
+            // Print the 'guess' array
+            std::cerr << "guess: ";
+            for (faiss::idx_t* it = guess+ k*i; it < guess+ (i+1)*k; ++it) {
+                std::cerr << *it << " ";
+            }
+            std::cerr << std::endl;
+            // ################## delete that later ##################
+            // ################## delete that later ##################
         }
 
         double recall = (count/double(nq*k));

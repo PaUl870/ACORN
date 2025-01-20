@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     int efc = 40; // default is 40
     int efs = 16; //  default is 16
     int k = 10; // search parameter
-    size_t d = 0; // dimension of the vectors to index - will be overwritten by the dimension of the dataset
+    size_t d = 128; // dimension of the vectors to index - will be overwritten by the dimension of the dataset
     int M; // HSNW param M TODO change M back
     int M_beta; // param for compression
     // float attr_sel = 0.001;
@@ -99,8 +99,8 @@ int main(int argc, char *argv[]) {
     int opt;
     {// parse arguments
 
-        if (argc < 8 || argc > 10) {
-            fprintf(stderr, "Syntax: %s <data_path> <save_path> <number vecs> <gamma> [<assignment_type>] [<alpha>] <dataset> <M> <M_beta>\n", argv[0]);
+        if (argc < 9 || argc > 11) {
+            fprintf(stderr, "Syntax: %s <data_path> <save_path> <number vecs> <gamma> [<assignment_type>] [<alpha>] <dataset> <M> <M_beta> <d>\n", argv[0]);
             exit(1);
         }
 
@@ -130,6 +130,9 @@ int main(int argc, char *argv[]) {
 
         M_beta = atoi(argv[7]);
         printf("M_beta: %d\n", M_beta);
+
+        d = atoi(argv[8]);
+        printf("d: %d\n", d);
 
     }
 
@@ -182,6 +185,8 @@ int main(int argc, char *argv[]) {
 
         delete[] xb;       
     }
+
+    peak_memory_footprint();
 
 
        // write hybrid index and partition indices to files
