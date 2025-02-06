@@ -674,6 +674,30 @@ std::vector<std::vector<int>> range_transform(std::vector<std::vector<std::strin
 }
 
 
+std::vector<std::vector<std::vector<std::string>>> LCF_transform(const std::vector<std::vector<std::string>> &aq) {
+    
+    std::vector<std::vector<std::vector<std::string>>> result;
+
+    for (const auto &row : aq) {
+        std::vector<std::vector<std::string>> parsedRow;
+        for (const auto &cell : row) {
+            std::vector<std::string> parsedValues;
+            std::stringstream ss(cell);
+            std::string value;
+
+            while (std::getline(ss, value, ',')) {
+                parsedValues.push_back(value);
+            }
+            parsedRow.push_back(parsedValues);
+        }
+        result.push_back(parsedRow);
+    }
+
+    return result;
+}
+
+
+
 
 
 

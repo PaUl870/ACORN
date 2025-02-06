@@ -73,6 +73,7 @@ int main(int argc, char *argv[]) {
     
     std::string data_path;
     std::string save_path;
+    std::string mode;
     int k;
     int efs;
     bool range = false;
@@ -140,7 +141,9 @@ int main(int argc, char *argv[]) {
         efs = atoi(argv[9]);
         printf("efs: %d\n", efs);
 
-        range = (std::string(argv[10]) == "range");
+        mode = argv[10];
+        printf("mode: %s\n", mode.c_str());
+
 
         d = atoi(argv[11]);
         printf("d: %d\n", d);
@@ -157,15 +160,22 @@ int main(int argc, char *argv[]) {
 
 
         std::string filename = data_path + "label_base.txt";
-        if(!range){
+        if(mode == "EMF"){
+            printf("[%.3f s] Loading attributes\n", elapsed() - t0);
+            read_txt(filename.c_str(), metadata);
+            printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
+                elapsed() - t0, metadata[0].size());
+        }else if (mode == "RF"){
+            printf("---filler---\n");
+            printf("---filler---\n");
+            printf("---filler---\n");
+        }else if (mode == "LCF"){
             printf("[%.3f s] Loading attributes\n", elapsed() - t0);
             read_txt(filename.c_str(), metadata);
             printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
                 elapsed() - t0, metadata[0].size());
         }else{
-            printf("---filler---\n");
-            printf("---filler---\n");
-            printf("---filler---\n");
+            printf("wrong mode. It has to be either EMF,RF,LCF.");
         }
 
 
@@ -210,7 +220,6 @@ int main(int argc, char *argv[]) {
     auto& hybrid_index = *dynamic_cast<faiss::IndexACORNFlat*>(faiss::read_index(filepath.c_str()));
     printf("[%.3f s] Loaded index from %s\n", elapsed() - t0, filepath.c_str());
 
-
     { // searching the hybrid database
         hybrid_index.acorn.efSearch = efs;
         printf("==================== ACORN INDEX ====================\n");
@@ -226,10 +235,9 @@ int main(int argc, char *argv[]) {
 
 
         double t1_f, t2_f;
-        std::vector<char> filter_ids_map(nq * N);
+        std::vector<char> filter_ids_map(nq * N, 0);
         // create filter_ids_map, ie a bitmap of the ids that are in the filter
-        if (range){
-
+        if (mode =="RF"){
             std::vector<std::vector<int>> raq = range_transform(aq, nq);
             t1_f = elapsed();
             for (int iq = 0; iq < nq; iq++) {
@@ -239,12 +247,27 @@ int main(int argc, char *argv[]) {
         
             }
             t2_f = elapsed();
-
-        }else{
+        }else if (mode == "EMF"){
             t1_f = elapsed();
             for (int xq = 0; xq < nq; xq++) {
                 for (int xb = 0; xb < N; xb++) {
                     filter_ids_map[xq * N + xb] = (bool) (metadata[xb] == aq[xq]);
+                }
+            }
+            t2_f = elapsed();
+        }else if (mode == "LCF"){
+            std::vector<std::vector<std::vector<std::string>>> lcmetadata = LCF_transform(metadata);
+            t1_f = elapsed();
+            for (int iq = 0; iq < nq; iq++) {
+                for (int xb = 0; xb < N; xb++) {
+                    bool check = 1;
+                    for (int ia = 0; ia < aq[iq].size(); ia++){
+                        std::vector<std::string> dattr = lcmetadata[xb][ia];
+                        if (std::find(dattr.begin(), dattr.end(), aq[iq][ia]) == dattr.end()){
+                            check = 0;
+                        }
+                    }
+                    filter_ids_map[iq * N + xb]=check;
                 }
             }
             t2_f = elapsed();
@@ -281,17 +304,17 @@ int main(int argc, char *argv[]) {
 
             // ################## delete that later ##################
             // ################## delete that later ##################
-            std::cerr << "answer: ";
-            for (int* it = answer+ k*i; it < answer + (i+1)*k; ++it) {
-                std::cerr << *it << " ";
-            }
-            std::cerr << std::endl;
-            // Print the 'guess' array
-            std::cerr << "guess: ";
-            for (faiss::idx_t* it = guess+ k*i; it < guess+ (i+1)*k; ++it) {
-                std::cerr << *it << " ";
-            }
-            std::cerr << std::endl;
+            // std::cerr << "answer: ";
+            // for (int* it = answer+ k*i; it < answer + (i+1)*k; ++it) {
+            //     std::cerr << *it << " ";
+            // }
+            // std::cerr << std::endl;
+            // // Print the 'guess' array
+            // std::cerr << "guess: ";
+            // for (faiss::idx_t* it = guess+ k*i; it < guess+ (i+1)*k; ++it) {
+            //     std::cerr << *it << " ";
+            // }
+            // std::cerr << std::endl;
             // ################## delete that later ##################
             // ################## delete that later ##################
         }
