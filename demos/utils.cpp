@@ -672,6 +672,7 @@ std::vector<std::vector<std::pair<int, int>>> range_transform(std::vector<std::v
     }
 
     return raq;
+}
 
 
 std::vector<std::vector<std::vector<std::string>>> LCF_transform(const std::vector<std::vector<std::string>> &aq) {
