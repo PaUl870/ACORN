@@ -240,14 +240,12 @@ int main(int argc, char *argv[]) {
         if (mode =="RF"){
             std::vector<std::vector<std::pair<int, int>>> raq = range_transform(aq, nq);
             t1_f = elapsed();
-            std::cout << raq[0].size() << std::endl;
             for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
                     for (int ia = 0; ia < raq[iq].size(); ia++) {
                         if (!(raq[iq][ia].first <= xb && xb <= raq[iq][ia].second)){
                             check = 0;
-                            std::cout << raq[iq][ia].first << " " << xb << " " << raq[iq][ia].second << std::endl;
                             break;
                         }
                     }
