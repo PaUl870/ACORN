@@ -244,7 +244,6 @@ int main(int argc, char *argv[]) {
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
                     for (int ia = 0; ia < aq[iq].size(); ia++){
-                        std::vector<std::string> dattr = lcmetadata[xb][ia];
                         if (bool) ((raq[iq][aq].first <= xb) && (xb <= raq[iq][aq].second)){
                             check = 0;
                         }
