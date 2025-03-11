@@ -243,7 +243,7 @@ int main(int argc, char *argv[]) {
             for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
-                    for (int ia = 0; ia < aq[iq].size(); ia++) {
+                    for (int ia = 0; ia < raq[iq].size(); ia++) {
                         if ((raq[iq][ia].first > xb) && (xb > raq[iq][ia].second)) {
                             check = 0;
                             break;
