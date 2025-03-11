@@ -166,9 +166,10 @@ int main(int argc, char *argv[]) {
             printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
                 elapsed() - t0, metadata[0].size());
         }else if (mode == "RF"){
-            printf("---filler---\n");
-            printf("---filler---\n");
-            printf("---filler---\n");
+            printf("[%.3f s] Loading attributes\n", elapsed() - t0);
+            read_txt(filename.c_str(), metadata);
+            printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
+                elapsed() - t0, metadata[0].size());
         }else if (mode == "LCF"){
             printf("[%.3f s] Loading attributes\n", elapsed() - t0);
             read_txt(filename.c_str(), metadata);
@@ -244,7 +245,8 @@ int main(int argc, char *argv[]) {
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
                     for (int ia = 0; ia < raq[iq].size(); ia++) {
-                        if (!(raq[iq][ia].first <= xb && xb <= raq[iq][ia].second)){
+                        int attr = std::stoi(metadata[xb][ia]);
+                        if (!(raq[iq][ia].first <= attr && attr <= raq[iq][ia].second)){
                             check = 0;
                             break;
                         }
