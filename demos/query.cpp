@@ -238,12 +238,19 @@ int main(int argc, char *argv[]) {
         std::vector<char> filter_ids_map(nq * N, 0);
         // create filter_ids_map, ie a bitmap of the ids that are in the filter
         if (mode =="RF"){
-            std::vector<std::vector<int>> raq = range_transform(aq, nq);
+            std::vector<std::vector<std::pair<int, int>>> raq = range_transform(aq, nq);
             t1_f = elapsed();
             for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
-                    filter_ids_map[iq * N + xb] = (bool) ((raq[iq][0] <= xb) && (xb <= raq[iq][1]));
-                }
+                    bool check = 1;
+                    for (int ia = 0; ia < aq[iq].size(); ia++){
+                        std::vector<std::string> dattr = lcmetadata[xb][ia];
+                        if (bool) ((raq[iq][aq].first <= xb) && (xb <= raq[iq][aq].second)){
+                            check = 0;
+                        }
+                    }
+                    filter_ids_map[iq * N + xb]=check;
+                } 
         
             }
             t2_f = elapsed();

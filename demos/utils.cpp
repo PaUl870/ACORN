@@ -645,30 +645,29 @@ void read_ivecs (const char *path, std::vector<int> &store, int &num_points, int
 
 
 
-std::vector<std::vector<int>> range_transform(std::vector<std::vector<std::string>> aq, int nq){
-    std::vector<std::vector<int>> raq(nq, std::vector<int>(2, 0));
-    std::string cur;
-    for (int i = 0; i < nq; i++){
-        cur = aq[i][0];
-        if (cur.size() < 5 || cur.front() != '(' || cur.back() != ')') {
-            throw std::invalid_argument("Invalid format: expected (x,y)");
+std::vector<std::vector<std::pair<int, int>>> range_transform(std::vector<std::vector<std::string>> aq, int nq) {
+    std::vector<std::vector<std::pair<int, int>>> raq(nq); // Outer vector for lines
+    
+    for (int i = 0; i < nq; i++) {
+        std::stringstream ss(aq[i][0]);  // Parse the string containing multiple pairs
+        std::string cur;
+
+        while (ss >> cur) {  // Read each "(x,y)" substring
+            if (cur.size() < 5 || cur.front() != '(' || cur.back() != ')') {
+                throw std::invalid_argument("Invalid format: expected (x,y)");
+            }
+
+            size_t commaPos = cur.find(',');
+            if (commaPos == std::string::npos) {
+                throw std::invalid_argument("Invalid format: no comma found");
+            }
+
+            // Extract and convert x, y
+            int x = std::stoi(cur.substr(1, commaPos - 1));
+            int y = std::stoi(cur.substr(commaPos + 1, cur.size() - commaPos - 2));
+
+            raq[i].emplace_back(x, y); // Add (x,y) pair to the current line
         }
-
-        // Find the comma
-        size_t commaPos = cur.find(',');
-        if (commaPos == std::string::npos) {
-            throw std::invalid_argument("Invalid format: no comma found");
-        }
-
-        // Extract x and y as substrings and convert to integers
-        std::string xStr = cur.substr(1, commaPos - 1);             // Extract x
-        std::string yStr = cur.substr(commaPos + 1, cur.size() - commaPos - 2); // Extract y
-
-        int x = std::stoi(xStr);
-        int y = std::stoi(yStr);
-
-        raq[i][0] = x;
-        raq[i][1] = y;
     }
     return raq;
 }
