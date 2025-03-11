@@ -246,7 +246,7 @@ int main(int argc, char *argv[]) {
                     for (int ia = 0; ia < raq[iq].size(); ia++) {
                         if (!(raq[iq][ia].first <= xb && xb <= raq[iq][ia].second)){
                             check = 0;
-                            std::cout << raq[iq][ia].first << " " << xb << " " raq[iq][ia].second << std::endl;
+                            std::cout << raq[iq][ia].first << " " << xb << " " << raq[iq][ia].second << std::endl;
                             break;
                         }
                     }
