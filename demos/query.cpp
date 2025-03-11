@@ -243,14 +243,14 @@ int main(int argc, char *argv[]) {
             for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
-                    for (int ia = 0; ia < aq[iq].size(); ia++){
-                        if (bool) ((raq[iq][aq].first <= xb) && (xb <= raq[iq][aq].second)){
+                    for (int ia = 0; ia < aq[iq].size(); ia++) {
+                        if ((raq[iq][ia].first <= xb) && (xb <= raq[iq][ia].second)) {
                             check = 0;
+                            break;
                         }
                     }
-                    filter_ids_map[iq * N + xb]=check;
-                } 
-        
+                    filter_ids_map[iq * N + xb] = check;
+                }
             }
             t2_f = elapsed();
         }else if (mode == "EMF"){
