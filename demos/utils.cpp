@@ -645,32 +645,33 @@ void read_ivecs (const char *path, std::vector<int> &store, int &num_points, int
 
 
 
+
 std::vector<std::vector<std::pair<int, int>>> range_transform(std::vector<std::vector<std::string>> aq, int nq) {
     std::vector<std::vector<std::pair<int, int>>> raq(nq); // Outer vector for lines
     
     for (int i = 0; i < nq; i++) {
-        std::stringstream ss(aq[i][0]);  // Parse the string containing multiple pairs
-        std::string cur;
-
-        while (ss >> cur) {  // Read each "(x,y)" substring
+        // Loop over each string in aq[i]
+        for (const auto& cur : aq[i]) {
             if (cur.size() < 5 || cur.front() != '(' || cur.back() != ')') {
                 throw std::invalid_argument("Invalid format: expected (x,y)");
             }
 
+            // Find the comma
             size_t commaPos = cur.find(',');
             if (commaPos == std::string::npos) {
                 throw std::invalid_argument("Invalid format: no comma found");
             }
 
-            // Extract and convert x, y
-            int x = std::stoi(cur.substr(1, commaPos - 1));
-            int y = std::stoi(cur.substr(commaPos + 1, cur.size() - commaPos - 2));
+            // Extract x and y as substrings and convert to integers
+            int x = std::stoi(cur.substr(1, commaPos - 1));             // Extract x
+            int y = std::stoi(cur.substr(commaPos + 1, cur.size() - commaPos - 2)); // Extract y
 
-            raq[i].emplace_back(x, y); // Add (x,y) pair to the current line
+            // Add the (x, y) pair to the current line in raq
+            raq[i].emplace_back(x, y);
         }
     }
+
     return raq;
-}
 
 
 std::vector<std::vector<std::vector<std::string>>> LCF_transform(const std::vector<std::vector<std::string>> &aq) {
