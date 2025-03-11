@@ -240,6 +240,7 @@ int main(int argc, char *argv[]) {
         if (mode =="RF"){
             std::vector<std::vector<std::pair<int, int>>> raq = range_transform(aq, nq);
             t1_f = elapsed();
+            std::cout << raq[0].size() << std::endl;
             for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
