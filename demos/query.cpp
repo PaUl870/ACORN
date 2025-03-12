@@ -242,7 +242,7 @@ int main(int argc, char *argv[]) {
         }
         
         std::cout << "query vecs data loaded, with dim: " << d2 << ", nb=" << nq << std::endl;
-        printf("[%.3f s] Loaded query vectors from %s\n", elapsed() - t0, filename.c_str());
+        // printf("[%.3f s] Loaded query vectors from %s\n", elapsed() - t0, filename.c_str());
  
     }
 
