@@ -218,7 +218,6 @@ int main(int argc, char *argv[]) {
         }
 
 
-        std::cout << "test0" << std::endl;
         
 
         filename = data_path + "label_groundtruth.ivecs";
@@ -227,7 +226,6 @@ int main(int argc, char *argv[]) {
         printf("[%.3f s] Loaded ground truth, gt_size: %d\n", elapsed() - t0, k);
     }
 
-    std::cout << "test1" << std::endl;
 
     size_t nq;
     float* xq;
@@ -247,7 +245,6 @@ int main(int argc, char *argv[]) {
  
     }
 
-    std::cout << "test2" << std::endl;
 
 
     printf("[%.3f s] Loading index\n", elapsed() - t0);
@@ -257,7 +254,6 @@ int main(int argc, char *argv[]) {
     auto& hybrid_index = *dynamic_cast<faiss::IndexACORNFlat*>(faiss::read_index(filepath.c_str()));
     printf("[%.3f s] Loaded index from %s\n", elapsed() - t0, filepath.c_str());
 
-    std::cout << "test3" << std::endl;
 
 
     { // searching the hybrid database
@@ -319,21 +315,18 @@ int main(int argc, char *argv[]) {
             }
             t2_f = elapsed();
         }else if (mode == "mixed"){
-            std::cout << "test4" << std::endl;
 
             std::vector<std::vector<std::vector<std::string>>> lcmetadata = LCF_transform(metadata_emis);
             std::vector<std::vector<std::pair<int, int>>> raq = range_transform(aq_r, nq);
 
             t1_f = elapsed();
             for (int iq = 0; iq < nq; iq++) {
-                std::cout << "test5" << std::endl;
 
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
                     if (metadata_em[xb] != aq_em[iq]){
                         check=0;
                     }
-                    std::cout << "test6" << std::endl;
 
                     for (int ia = 0; ia < aq_emis[iq].size(); ia++){
                         std::vector<std::string> dattr = lcmetadata[xb][ia];
@@ -341,7 +334,6 @@ int main(int argc, char *argv[]) {
                             check = 0;
                         }
                     }
-                    std::cout << "test7" << std::endl;
 
                     for (int ia = 0; ia < raq[iq].size(); ia++) {
                         int attr = std::stoi(metadata_r[xb][ia]);
@@ -349,7 +341,6 @@ int main(int argc, char *argv[]) {
                             check = 0;
                         }
                     }
-                    std::cout << "test8" << std::endl;
 
                     filter_ids_map[iq * N + xb]=check;
                 }
