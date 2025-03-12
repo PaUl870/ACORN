@@ -337,7 +337,7 @@ int main(int argc, char *argv[]) {
 
                     for (int ia = 0; ia < aq_emis[iq].size(); ia++){
                         std::vector<std::string> dattr = lcmetadata[xb][ia];
-                        if (std::find(dattr.begin(), dattr.end(), aq[iq][ia]) == dattr.end()){
+                        if (std::find(dattr.begin(), dattr.end(), aq_emis[iq][ia]) == dattr.end()){
                             check = 0;
                         }
                     }
