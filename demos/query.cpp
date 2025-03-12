@@ -206,6 +206,10 @@ int main(int argc, char *argv[]) {
             read_txt(filename.c_str(), aq);
             printf("[%.3f s] Loaded query attributes, %ld attr's found\n", 
             elapsed() - t0, aq[0].size());
+            std::cout << "-----filler-----" << std::endl;
+            std::cout << "-----filler-----" << std::endl;
+            std::cout << "-----filler-----" << std::endl;
+            std::cout << "-----filler-----" << std::endl;
         }else{
             std::string filename_em = data_path + "label_query_em.txt";
             std::string filename_emis = data_path + "label_query_emis.txt";
