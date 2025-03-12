@@ -218,6 +218,7 @@ int main(int argc, char *argv[]) {
         }
 
 
+        std::cout << "test0" << std::endl;
         
 
         filename = data_path + "label_groundtruth.ivecs";
@@ -226,7 +227,7 @@ int main(int argc, char *argv[]) {
         printf("[%.3f s] Loaded ground truth, gt_size: %d\n", elapsed() - t0, k);
     }
 
-
+    std::cout << "test1" << std::endl;
 
     size_t nq;
     float* xq;
@@ -241,10 +242,13 @@ int main(int argc, char *argv[]) {
             d = d2;
         }
         
-        // std::cout << "query vecs data loaded, with dim: " << d2 << ", nb=" << nq << std::endl;
-        // printf("[%.3f s] Loaded query vectors from %s\n", elapsed() - t0, filename.c_str());
+        std::cout << "query vecs data loaded, with dim: " << d2 << ", nb=" << nq << std::endl;
+        printf("[%.3f s] Loaded query vectors from %s\n", elapsed() - t0, filename.c_str());
  
     }
+
+    std::cout << "test2" << std::endl;
+
 
     printf("[%.3f s] Loading index\n", elapsed() - t0);
     std::stringstream filepath_stream;
