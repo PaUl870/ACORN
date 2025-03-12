@@ -155,6 +155,14 @@ int main(int argc, char *argv[]) {
     std::vector<std::vector<std::string>> metadata;
     std::vector<std::vector<std::string>> aq;
     std::vector<int> gt;
+    std::vector<std::vector<std::string>> metadata_em;
+    std::vector<std::vector<std::string>> metadata_emis;
+    std::vector<std::vector<std::string>> metadata_r;
+    std::vector<std::vector<std::string>> aq_em;
+    std::vector<std::vector<std::string>> aq_emis;
+    std::vector<std::vector<std::string>> aq_r;
+
+
 
     { // load attributes
 
@@ -175,17 +183,41 @@ int main(int argc, char *argv[]) {
             read_txt(filename.c_str(), metadata);
             printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
                 elapsed() - t0, metadata[0].size());
+        }else if (mode=="mixed"){
+            printf("[%.3f s] Loading attributes\n", elapsed() - t0);
+
+            std::string filename_em = data_path + "label_base_em.txt";
+            std::string filename_emis = data_path + "label_base_emis.txt";
+            std::string filename_r = data_path + "label_base_r.txt";
+
+            read_txt(filename_em.c_str(), metadata_em);
+            read_txt(filename_emis.c_str(), metadata_emis);
+            read_txt(filename_r.c_str(), metadata_r);
+
+            printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
+                elapsed() - t0, metadata[0].size());
         }else{
-            printf("wrong mode. It has to be either EMF,RF,LCF.");
+            printf("wrong mode. It has to be either EMF,RF,LCF or mixed");
         }
 
 
+        if (mode != "mixed"){
+            filename = data_path + "label_query.txt";
+            read_txt(filename.c_str(), aq);
+            printf("[%.3f s] Loaded query attributes, %ld attr's found\n", 
+            elapsed() - t0, aq[0].size());
+        }else{
+            filename_em = data_path + "label_query_em.txt";
+            filename_emis = data_path + "label_query_emis.txt";
+            filename_r = data_path + "label_query_r.txt";
+            read_txt(filename_em.c_str(), aq_em);
+            read_txt(filename_emis.c_str(), aq_emis);
+            read_txt(filename_r.c_str(), aq_r);
+            printf("[%.3f s] Loaded query attributes, %ld attr's found\n", 
+            elapsed() - t0, aq[0].size());
+        }
 
 
-        filename = data_path + "label_query.txt";
-        read_txt(filename.c_str(), aq);
-        printf("[%.3f s] Loaded query attributes, %ld attr's found\n", 
-        elapsed() - t0, aq[0].size());
         
 
         filename = data_path + "label_groundtruth.ivecs";
@@ -272,6 +304,33 @@ int main(int argc, char *argv[]) {
                     for (int ia = 0; ia < aq[iq].size(); ia++){
                         std::vector<std::string> dattr = lcmetadata[xb][ia];
                         if (std::find(dattr.begin(), dattr.end(), aq[iq][ia]) == dattr.end()){
+                            check = 0;
+                        }
+                    }
+                    filter_ids_map[iq * N + xb]=check;
+                }
+            }
+            t2_f = elapsed();
+        }else if (mode == "mixed"){
+            std::vector<std::vector<std::vector<std::string>>> lcmetadata = LCF_transform(metadata_emis);
+            std::vector<std::vector<std::pair<int, int>>> raq = range_transform(aq_r, nq);
+
+            t1_f = elapsed();
+            for (int xq = 0; xq < nq; xq++) {
+                for (int xb = 0; xb < N; xb++) {
+                    bool check = 1;
+                    if (metadata_em[xb] != aq_em[xq]){
+                        check=0;
+                    }
+                    for (int ia = 0; ia < aq_emis[iq].size(); ia++){
+                        std::vector<std::string> dattr = lcmetadata[xb][ia];
+                        if (std::find(dattr.begin(), dattr.end(), aq[iq][ia]) == dattr.end()){
+                            check = 0;
+                        }
+                    }
+                    for (int ia = 0; ia < raq[iq].size(); ia++) {
+                        int attr = std::stoi(metadata_r[xb][ia]);
+                        if (!(raq[iq][ia].first <= attr && attr <= raq[iq][ia].second)){
                             check = 0;
                         }
                     }
