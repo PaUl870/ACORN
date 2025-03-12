@@ -257,6 +257,9 @@ int main(int argc, char *argv[]) {
     auto& hybrid_index = *dynamic_cast<faiss::IndexACORNFlat*>(faiss::read_index(filepath.c_str()));
     printf("[%.3f s] Loaded index from %s\n", elapsed() - t0, filepath.c_str());
 
+    std::cout << "test3" << std::endl;
+
+
     { // searching the hybrid database
         hybrid_index.acorn.efSearch = efs;
         printf("==================== ACORN INDEX ====================\n");
@@ -316,6 +319,8 @@ int main(int argc, char *argv[]) {
             }
             t2_f = elapsed();
         }else if (mode == "mixed"){
+            std::cout << "test4" << std::endl;
+
             std::vector<std::vector<std::vector<std::string>>> lcmetadata = LCF_transform(metadata_emis);
             std::vector<std::vector<std::pair<int, int>>> raq = range_transform(aq_r, nq);
 
