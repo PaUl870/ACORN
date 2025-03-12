@@ -319,7 +319,7 @@ int main(int argc, char *argv[]) {
             for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
-                    if (metadata_em[xb] != aq_em[xq]){
+                    if (metadata_em[xb] != aq_em[iq]){
                         check=0;
                     }
                     for (int ia = 0; ia < aq_emis[iq].size(); ia++){
