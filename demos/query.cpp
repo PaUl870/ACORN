@@ -207,9 +207,9 @@ int main(int argc, char *argv[]) {
             printf("[%.3f s] Loaded query attributes, %ld attr's found\n", 
             elapsed() - t0, aq[0].size());
         }else{
-            filename_em = data_path + "label_query_em.txt";
-            filename_emis = data_path + "label_query_emis.txt";
-            filename_r = data_path + "label_query_r.txt";
+            std::string filename_em = data_path + "label_query_em.txt";
+            std::string filename_emis = data_path + "label_query_emis.txt";
+            std::string filename_r = data_path + "label_query_r.txt";
             read_txt(filename_em.c_str(), aq_em);
             read_txt(filename_emis.c_str(), aq_emis);
             read_txt(filename_r.c_str(), aq_r);
@@ -316,7 +316,7 @@ int main(int argc, char *argv[]) {
             std::vector<std::vector<std::pair<int, int>>> raq = range_transform(aq_r, nq);
 
             t1_f = elapsed();
-            for (int xq = 0; xq < nq; xq++) {
+            for (int iq = 0; iq < nq; iq++) {
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
                     if (metadata_em[xb] != aq_em[xq]){
