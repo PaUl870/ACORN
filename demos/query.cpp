@@ -195,7 +195,7 @@ int main(int argc, char *argv[]) {
             read_txt(filename_r.c_str(), metadata_r);
 
             printf("[%.3f s] Loaded metadata, %ld attr's found\n", 
-                elapsed() - t0, metadata[0].size());
+                elapsed() - t0, metadata_em[0].size());
         }else{
             printf("wrong mode. It has to be either EMF,RF,LCF or mixed");
         }
