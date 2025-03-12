@@ -326,23 +326,31 @@ int main(int argc, char *argv[]) {
 
             t1_f = elapsed();
             for (int iq = 0; iq < nq; iq++) {
+                std::cout << "test5" << std::endl;
+
                 for (int xb = 0; xb < N; xb++) {
                     bool check = 1;
                     if (metadata_em[xb] != aq_em[iq]){
                         check=0;
                     }
+                    std::cout << "test6" << std::endl;
+
                     for (int ia = 0; ia < aq_emis[iq].size(); ia++){
                         std::vector<std::string> dattr = lcmetadata[xb][ia];
                         if (std::find(dattr.begin(), dattr.end(), aq[iq][ia]) == dattr.end()){
                             check = 0;
                         }
                     }
+                    std::cout << "test7" << std::endl;
+
                     for (int ia = 0; ia < raq[iq].size(); ia++) {
                         int attr = std::stoi(metadata_r[xb][ia]);
                         if (!(raq[iq][ia].first <= attr && attr <= raq[iq][ia].second)){
                             check = 0;
                         }
                     }
+                    std::cout << "test8" << std::endl;
+
                     filter_ids_map[iq * N + xb]=check;
                 }
             }
