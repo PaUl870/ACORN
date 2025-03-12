@@ -214,7 +214,7 @@ int main(int argc, char *argv[]) {
             read_txt(filename_emis.c_str(), aq_emis);
             read_txt(filename_r.c_str(), aq_r);
             printf("[%.3f s] Loaded query attributes, %ld attr's found\n", 
-            elapsed() - t0, aq[0].size());
+            elapsed() - t0, aq_em[0].size());
         }
 
 
